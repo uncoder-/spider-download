@@ -1,8 +1,7 @@
 import puppeteer from "puppeteer";
 import axios from "axios";
 import fs from "fs";
-import chalk from "chalk";
-
+import { Tlog } from "./util";
 //目标地址
 const targetUrl = "http://f-u-g-i-t-i-v-o.tumblr.com/archive";
 // 下载目录
@@ -21,10 +20,7 @@ function down(url) {
     response.data.pipe(fs.createWriteStream(`${publicFolder}index.html`));
   });
 }
-function Tlog() {
-  const args = Array.from(arguments).join(",");
-  console.log(chalk.red(args));
-}
+
 (async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
@@ -32,7 +28,7 @@ function Tlog() {
   // await browser.close();
   await page.goto("http://baidu.com/");
   page.on("console", msg => {
-    Tlog("debugger from console", msg.text());
+    Tlog(msg.text(), "test", "hellow");
   });
   const bodyE = await page.evaluate(sel => {
     const $els = document.querySelectorAll(sel);
