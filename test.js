@@ -21,7 +21,7 @@ function down(url) {
     response.data.pipe(fs.createWriteStream(`${publicFolder}index.html`));
   });
 }
-function myConsole() {
+function Tlog() {
   const args = Array.from(arguments).join(",");
   console.log(chalk.red(args));
 }
@@ -32,7 +32,7 @@ function myConsole() {
   // await browser.close();
   await page.goto("http://baidu.com/");
   page.on("console", msg => {
-    console.log("debugger from console", msg.text());
+    Tlog("debugger from console", msg.text());
   });
   const bodyE = await page.evaluate(sel => {
     const $els = document.querySelectorAll(sel);
