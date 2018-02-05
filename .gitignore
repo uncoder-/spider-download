@@ -1,2 +1,5 @@
 node_modules
 .DS_Store
+download
+yarn.lock
+.vscode

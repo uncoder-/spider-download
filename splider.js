@@ -1,29 +1,27 @@
 /**
  * 爬页面
  */
-import request from "request";
+import axios from "axios";
 import cheerio from "cheerio";
 import fs from "fs";
 import path from "path";
 
 //目标地址
-const targetUrl = "https://f-u-g-i-t-i-v-o.tumblr.com/archive";
-// 翻墙代理
-const proxyUrl = "http://127.0.0.1:8118";
+const targetUrl = "http://f-u-g-i-t-i-v-o.tumblr.com/archive";
 // 下载目录
 const publicFolder = "./download/";
 
 async function getHtml(url) {
-  return new Promise((resolve, reject) => {
-    const options = { url: targetUrl, proxy: proxyUrl };
-    request
-      .get(options, (error, response, body) => {
-        // console.log(body);
-        resolve(body);
-      })
-      .on("error", error => {
-        console.log("fuck", error);
-      });
+  return axios({
+    method: "get",
+    url: targetUrl,
+    responseType: "text",
+    proxy: {
+      host: "127.0.0.1",
+      port: 8118
+    }
+  }).then(json => {
+    return json.data;
   });
 }
 async function analyseHtml() {
@@ -31,7 +29,7 @@ async function analyseHtml() {
   const $body = cheerio.load(htmlString);
   // 爬取规则
   const images = [];
-  // console.log($body('.has_imageurl'))
+  // console.log($body(".has_imageurl"));
   $body(".has_imageurl").map((index, item) => {
     images.push(item.attribs["data-imageurl"]);
   });
@@ -40,12 +38,17 @@ async function analyseHtml() {
 function saveImg(url) {
   const fitlName = path.basename(url);
   const filepath = publicFolder + fitlName;
-  const options = { url: url, proxy: proxyUrl };
-  request(options)
-    .pipe(fs.createWriteStream(filepath))
-    .on("close", function() {
-      console.log(fitlName, "下载成功");
-    });
+  axios({
+    method: "get",
+    url: url,
+    responseType: "stream",
+    proxy: {
+      host: "127.0.0.1",
+      port: 8118
+    }
+  }).then(function(response) {
+    response.data.pipe(fs.createWriteStream(filepath));
+  });
 }
 async function download() {
   const images = await analyseHtml();
@@ -64,4 +67,4 @@ function init() {
   });
   download();
 }
-//init();
+init();
