@@ -28,7 +28,7 @@ function down(url) {
   // await browser.close();
   await page.goto("http://baidu.com/");
   page.on("console", msg => {
-    Tlog(msg.text(), "test", "hellow");
+    Tlog(msg.text());
   });
   const bodyE = await page.evaluate(sel => {
     const $els = document.querySelectorAll(sel);
