@@ -24,15 +24,16 @@ function down(url) {
 (async () => {
   const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
-  // await page.screenshot({ path: `${publicFolder}example.png` });
-  // await browser.close();
   await page.goto("http://baidu.com/");
   page.on("console", msg => {
     Tlog(msg.text());
   });
   const bodyE = await page.evaluate(sel => {
-    const $els = document.querySelectorAll(sel);
-    console.log($els.length);
+    const $el = document.querySelector(sel);
+    console.log($el.innerHTML);
     // ...
-  }, ".bg");
+    return {};
+  }, "body");
+  await page.screenshot({ path: `${publicFolder}example.png` });
+  await browser.close();
 })();

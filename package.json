@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "babel-node test"
+    "test": "babel-node splider2"
   },
   "author": "uncoder",
   "license": "ISC",
