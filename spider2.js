@@ -22,18 +22,27 @@ function down(url) {
 }
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    slowMo: 200,
+    headless: false,
+    devtools: true
+  });
   const page = await browser.newPage();
   await page.goto("http://baidu.com/");
   page.on("console", msg => {
     Tlog(msg.text());
   });
-  const bodyE = await page.evaluate(sel => {
+  // 元素handle
+  const bodyElHandle = await page.$("body");
+  Tlog(await bodyElHandle.getProperty("innerText"));
+  // JShandle
+  const bodyJSHandle = await page.evaluate(sel => {
     const $el = document.querySelector(sel);
-    console.log($el.innerHTML);
+    console.log($el.innerText);
     // ...
     return {};
   }, "body");
-  await page.screenshot({ path: `${publicFolder}example.png` });
+  // const response = await page.waitForNavigation();
+  // await page.screenshot({ path: `${publicFolder}example.png` });
   await browser.close();
 })();
