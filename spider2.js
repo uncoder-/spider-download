@@ -55,6 +55,7 @@ function down(url) {
       interceptedRequest.continue();
     }
   });
+
   // 请求成功后拦截
   let counter = 0;
   page.on("requestfinished", async request => {
